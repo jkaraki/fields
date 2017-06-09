@@ -130066,7 +130066,7 @@ function findDist(){
           output.push(trips);
         }
  
-    }
+    }   
     output.sort(function(a, b) {
       return a[0]-b[0];
     });
@@ -130075,7 +130075,10 @@ function findDist(){
 function getAddress(arr){
   var url = "http://api.opencagedata.com/geocode/v1/json?q="+encodeURIComponent(arr[1])+"+"+encodeURIComponent(arr[2])+"&key=a3922f5697cf4356b31ba732d6ec7a72";
 
-  fetch(url).then(function(data) {
-    let authors = data.results; // Get the results
-  });     
+   $.getJSON(url, function (data) {
+      console.log(data);
+
+      var items = data['results']['formatted'];
+      return items;
+      });
 }
