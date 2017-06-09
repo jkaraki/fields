@@ -130054,14 +130054,16 @@ function mindist(joe, randall){
 }
 
 function findDist(){
+    var randall = toAddress(document.getElementById("l").value)
+    var joe = toAddress() 
     var splash = data["elements"];
     var output =  new Array();
     for (var i = 0; i <10000; i++) {
         var a = splash [i];
         if (a.hasOwnProperty('lat'))
         {
-          var randall = distance(38.862783, -77.423597, a['lat'], a['lon']);
-          var joe = distance(39.009764, -77.310278, a['lat'], a['lon']);
+          randall = distance(38.862783, -77.423597, a['lat'], a['lon']);
+          joe = distance(39.009764, -77.310278, a['lat'], a['lon']);
           var trips = [mindist(joe, randall),a['lat'], a['lon'] ];
           output.push(trips);
         }
@@ -130070,15 +130072,29 @@ function findDist(){
     output.sort(function(a, b) {
       return a[0]-b[0];
     });
-    getAddress(output[1]);
+    for (i = 1; i<11; i++)
+    {
+      callAddress(output[i]);
+
+    }
 }
-function getAddress(arr){
-  var url = "http://api.opencagedata.com/geocode/v1/json?q="+encodeURIComponent(arr[1])+"+"+encodeURIComponent(arr[2])+"&key=a3922f5697cf4356b31ba732d6ec7a72";
-
-   $.getJSON(url, function (data) {
-      console.log(data);
-
-      var items = data['results']['formatted'];
-      return items;
-      });
+function changeList(response){
+    var ul = document.getElementById("list");
+    var li = document.createElement("li");
+    li.appendChild(document.createTextNode(response.results[0].formatted));
+    ul.appendChild(li);
+}
+function callAddress(arr){
+    var api_url = "http://api.opencagedata.com/geocode/v1/json?q="+encodeURIComponent(arr[1])
+    +"+"+encodeURIComponent(arr[2])+"&key=a3922f5697cf4356b31ba732d6ec7a72";
+    var req = new XMLHttpRequest();
+    req.onload = function() {
+    if (req.readyState == 4 && req.status == 200) {
+        var response = JSON.parse(this.responseText);
+        changeList(response);
+        console.log(response);
+        }
+    };
+    req.open("GET", api_url, true);
+    req.send();
 }
