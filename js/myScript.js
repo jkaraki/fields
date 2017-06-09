@@ -130054,8 +130054,8 @@ function mindist(joe, randall){
 }
 
 function findDist(){
-    var randall = toAddress(document.getElementById("l").value)
-    var joe = toAddress() 
+    var randall;// = toAddress(document.getElementById("l").value);
+    var joe;// = toAddress();
     var splash = data["elements"];
     var output =  new Array();
     for (var i = 0; i <10000; i++) {
