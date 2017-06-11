@@ -130052,18 +130052,50 @@ function mindist(joe, randall){
     return (Math.abs(joe)+ Math.abs(randall))
 
 }
-
+function toLat(address){
+    var parts = address.split(", ");
+    var api_url = "http://api.opencagedata.com/geocode/v1/json?q="+encodeURIComponent(parts[0])
+    +"%2C+"+encodeURIComponent(parts[1])+"%2C+"+encodeURIComponent(parts[2])
+    +"&key=a3922f5697cf4356b31ba732d6ec7a72";
+    var req = new XMLHttpRequest();
+    req.onload = function() {
+    if (req.readyState == 4 && req.status == 200) {
+        var response = JSON.parse(this.responseText);
+        return response.results[0].geometry.lat;
+        console.log(response);
+        }
+    };
+    req.open("GET", api_url, true);
+    req.send();
+}
+function toLong(address){
+    var parts = address.split(", ");
+    var api_url = "http://api.opencagedata.com/geocode/v1/json?q="+encodeURIComponent(parts[0])
+    +"%2C+"+encodeURIComponent(parts[1])+"%2C+"+encodeURIComponent(parts[2])
+    +"&key=a3922f5697cf4356b31ba732d6ec7a72";
+    var req = new XMLHttpRequest();
+    req.onload = function() {
+    if (req.readyState == 4 && req.status == 200) {
+        var response = JSON.parse(this.responseText);
+        return response.results[0].geometry.lng;
+        }
+    };
+    req.open("GET", api_url, true);
+    req.send();
+}
 function findDist(){
-    var randall;// = toAddress(document.getElementById("l").value);
-    var joe;// = toAddress();
+    var latA = toLat(document.getElementById("addOne").value);
+    var longA = toLong(document.getElementById("addOne").value);
+    var latB = toLat(document.getElementById("addTwo").value);
+    var longB = toLong(document.getElementById("addTwo").value);
     var splash = data["elements"];
     var output =  new Array();
-    for (var i = 0; i <10000; i++) {
+    for (var i = 0; i <splash.length; i++) {
         var a = splash [i];
         if (a.hasOwnProperty('lat'))
         {
-          randall = distance(38.862783, -77.423597, a['lat'], a['lon']);
-          joe = distance(39.009764, -77.310278, a['lat'], a['lon']);
+          randall = distance(latA, longA, a['lat'], a['lon']);
+          joe = distance(latB, longB, a['lat'], a['lon']);
           var trips = [mindist(joe, randall),a['lat'], a['lon'] ];
           output.push(trips);
         }
