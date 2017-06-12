@@ -130036,6 +130036,7 @@ var  data = {
   ]
 }
 
+
 function distance(lat1, lon1, lat2, lon2){
     var radlat1 = Math.PI * lat1/180
 	var radlat2 = Math.PI * lat2/180
@@ -130052,6 +130053,36 @@ function mindist(joe, randall){
     return (Math.abs(joe)+ Math.abs(randall))
 
 }
+var b = true;
+function changeLat(response){
+  if (b==true){
+     var s = document.getElementById("lat1");
+    s.innerHTML = response.results[0].geometry.lat;
+        b=false;
+
+  }
+  else{
+    var s = document.getElementById("lat2");
+    s.innerHTML = response.results[0].geometry.lat;
+        b=true;
+
+  }
+}
+function changeLng(response){
+  if (b==true){
+     var s = document.getElementById("lng1");
+    s.innerHTML = response.results[0].geometry.lng;
+        b=false;
+
+  }
+  else{
+    var s = document.getElementById("lng2");
+    s.innerHTML = response.results[0].geometry.lng;
+            b=true;
+
+
+  };
+}
 function toLat(address){
     var parts = address.split(", ");
     var api_url = "http://api.opencagedata.com/geocode/v1/json?q="+encodeURIComponent(parts[0])
@@ -130061,8 +130092,7 @@ function toLat(address){
     req.onload = function() {
     if (req.readyState == 4 && req.status == 200) {
         var response = JSON.parse(this.responseText);
-        return response.results[0].geometry.lat;
-        console.log(response);
+        changeLat(response);
         }
     };
     req.open("GET", api_url, true);
@@ -130077,17 +130107,22 @@ function toLong(address){
     req.onload = function() {
     if (req.readyState == 4 && req.status == 200) {
         var response = JSON.parse(this.responseText);
-        return response.results[0].geometry.lng;
+        changeLng(response);
         }
     };
     req.open("GET", api_url, true);
     req.send();
 }
 function findDist(){
-    var latA = toLat(document.getElementById("addOne").value);
-    var longA = toLong(document.getElementById("addOne").value);
-    var latB = toLat(document.getElementById("addTwo").value);
-    var longB = toLong(document.getElementById("addTwo").value);
+    toLat(document.getElementById("addOne").value);
+    toLong(document.getElementById("addOne").value);
+    toLat(document.getElementById("addTwo").value);
+    toLong(document.getElementById("addTwo").value);
+    var latA=document.getElementById("lat1").innerHTML;
+    var latB=document.getElementById("lat2").innerHTML;
+   var longA=document.getElementById("lng1").innerHTML;
+  var  longB=document.getElementById("lng2").innerHTML;
+
     var splash = data["elements"];
     var output =  new Array();
     for (var i = 0; i <splash.length; i++) {
@@ -130124,7 +130159,7 @@ function callAddress(arr){
     if (req.readyState == 4 && req.status == 200) {
         var response = JSON.parse(this.responseText);
         changeList(response);
-        console.log(response);
+      //  console.log(response);
         }
     };
     req.open("GET", api_url, true);
